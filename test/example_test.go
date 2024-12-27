@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"data-validator/validator"
+	govalid "data-validator/validator"
 )
 
 type User struct {
@@ -20,7 +20,7 @@ func TestExample(t *testing.T) {
 		Email: "invalid_email",
 	}
 
-	errs := validator.ValidateStruct(user)
+	errs := govalid.ValidateStruct(user)
 	if len(errs) > 0 {
 		fmt.Println("Validation Errors : ")
 		for _, err := range errs {

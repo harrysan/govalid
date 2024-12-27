@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"testing"
 
-	"data-validator/validator"
+	govalid "data-validator/validator"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCustomValidation(t *testing.T) {
-	err := validator.RegisterCustomRule("isEven", func(field string, value interface{}) error {
+	err := govalid.RegisterCustomRule("isEven", func(field string, value interface{}) error {
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("%s must be an integer", field)
@@ -30,7 +30,7 @@ func TestCustomValidation(t *testing.T) {
 	}
 
 	data := Data{Number: 3} // Expect error
-	errs := validator.ValidateStruct(data)
+	errs := govalid.ValidateStruct(data)
 
 	assert.NotNil(t, errs)
 
