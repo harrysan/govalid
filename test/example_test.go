@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	govalid "govalid/validator"
+	govalid "github.com/harrysan/govalid/validator"
 )
 
 type User struct {

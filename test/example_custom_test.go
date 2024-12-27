@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	govalid "govalid/validator"
-
+	govalid "github.com/harrysan/govalid/validator"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,6 +1,6 @@
 # GoValid
 
-ValidationLib is a lightweight validation library for Golang designed to simplify data structure validation using tags in structs. It supports built-in rules like `required`, `min`, `max`, and `email`, and allows users to define custom validation rules.
+GoValid is a lightweight validation library for Golang designed to simplify data structure validation using tags in structs. It supports built-in rules like `required`, `min`, `max`, and `email`, and allows users to define custom validation rules.
 
 ---
 
@@ -30,7 +30,6 @@ Install the library using `go get`:
 ### **1. Validate Structs with Built-In Rules**
 
 Use the `validate` tag to define rules for your struct fields.
-
 
 ```go
 package main
@@ -65,7 +64,6 @@ func main() {
 }
 ```
 
-
 **Output:**
 
 ```go
@@ -80,7 +78,6 @@ Field 'Email' failed validation 'email': invalid email format
 ### **2. Add Custom Validation Rules**
 
 You can register custom validation rules using the `RegisterCustomRule` function.
-
 
 ```go
 package main
@@ -125,7 +122,6 @@ func main() {
 	}
 }
 ```
-
 
 **Output:**
 

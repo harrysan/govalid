@@ -1,4 +1,4 @@
-module govalid
+module github.com/harrysan/govalid
 
 go 1.21.1
 
