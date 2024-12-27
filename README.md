@@ -36,7 +36,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/harrysan/govalid/validator"
+	"github.com/harrysan/govalid"
 )
 
 type User struct {
@@ -84,7 +84,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/username/validation-lib/validator"
+	"github.com/harrysan/govalid"
 )
 
 func main() {
