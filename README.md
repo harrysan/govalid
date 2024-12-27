@@ -21,7 +21,7 @@ ValidationLib is a lightweight validation library for Golang designed to simplif
 
 Install the library using `go get`:
 
-`go get github.com/username/validation-lib`
+`go get github.com/harrysan/govalid`
 
 ---
 
@@ -68,10 +68,12 @@ func main() {
 
 **Output:**
 
-`Validation Errors:
+```go
+Validation Errors:
 Field 'Name' failed validation 'min=3': value must be greater than or equal to 3
 Field 'Age' failed validation 'min=18': value must be greater than or equal to 18
-Field 'Email' failed validation 'email': invalid email format`
+Field 'Email' failed validation 'email': invalid email format
+```
 
 ---
 
@@ -127,8 +129,10 @@ func main() {
 
 **Output:**
 
-`Validation Errors:
-Field 'Number' failed validation 'isEven': Number must be an even number`
+```go
+Validation Errors:
+Field 'Number' failed validation 'isEven': Number must be an even number
+```
 
 ---
 
@@ -147,13 +151,15 @@ Field 'Number' failed validation 'isEven': Number must be an even number`
 
 ### **1. ValidateStruct**
 
-`func ValidateStruct(s interface{}) []ValidationError`
-
-Validates a struct based on the `validate` tags. Returns a slice of validation errors.
+```go
+func ValidateStruct(s interface{}) []ValidationError
+```
 
 ### **2. RegisterCustomRule**
 
-`func RegisterCustomRule(name string, rule CustomRule) error`
+```go
+func RegisterCustomRule(name string, rule CustomRule) error
+```
 
 Registers a custom validation rule with a unique name and a function that implements the rule.
 
@@ -161,28 +167,29 @@ Registers a custom validation rule with a unique name and a function that implem
 
 Struct representing a validation error:
 
-`type ValidationError struct {
+```go
+type ValidationError struct {
 	Field string      // Name of the field that failed validation
 	Tag   string      // The validation rule that failed
 	Value interface{} // The value of the field that failed validation
 	Err   error       // Details about the error
-}`
+}
+```
 
 ---
 
 ## 📂 Project Structure
 
-`.
-└── govalid/
-    ├── go.mod
-    ├── validator/
-    │   ├── validator.go   # Core validation logic
-    │   ├── rules.go       # Built-in validation rules
-    │   └── custom.go      # Custom rule support
-    ├── test/
-    │   ├── example_test.go           # Example usage
-    │   └── example_custom_test.go     # Example custom usage
-    └── README.md          # Documentation`
+`govalid/
+├── go.mod                  		# Go module file
+├── validator/
+│   ├── validator.go        		# Core validation logic
+│   ├── rules.go            		# Built-in validation rules
+│   ├── custom.go           		# Custom validation rule support
+├── test/
+│   ├── example_test.go     		# Unit test for basic validation
+│   ├── example_custom_test.go 		# Unit test for custom validation rules
+├── README.md               		# Project documentation`
 
 ---
 
