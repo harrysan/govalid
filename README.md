@@ -52,7 +52,7 @@ func main() {
 		Email: "invalid-email",
 	}  
 
-	errs := validator.ValidateStruct(user)
+	errs := govalid.ValidateStruct(user)
 	if len(errs) > 0 {
 		fmt.Println("Validation Errors:")
 		for _, err := range errs {
@@ -89,7 +89,7 @@ import (
 
 func main() {
 	// Register a custom rule
-	err := validator.RegisterCustomRule("isEven", func(field string, value interface{}) error {
+	err := govalid.RegisterCustomRule("isEven", func(field string, value interface{}) error {
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("%s must be an integer", field)
@@ -110,7 +110,7 @@ func main() {
 	}
 
 	data := Data{Number: 3}
-	errs := validator.ValidateStruct(data)
+	errs := govalid.ValidateStruct(data)
   
 	if len(errs) > 0 {
 		fmt.Println("Validation Errors:")
