@@ -180,7 +180,8 @@ type ValidationError struct {
 
 ## 📂 Project Structure
 
-`govalid/
+```
+govalid/
 ├── go.mod                  		# Go module file
 ├── validator/
 │   ├── validator.go        		# Core validation logic
@@ -189,7 +190,8 @@ type ValidationError struct {
 ├── test/
 │   ├── example_test.go     		# Unit test for basic validation
 │   ├── example_custom_test.go 		# Unit test for custom validation rules
-├── README.md               		# Project documentation`
+├── README.md               		# Project documentation
+```
 
 ---
 
