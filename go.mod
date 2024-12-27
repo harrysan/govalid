@@ -1,4 +1,4 @@
-module data-validator
+module govalid
 
 go 1.21.1
 
