@@ -79,6 +79,8 @@ func applyRule(fieldName string, value any, rule string) error {
 		return validateMax(value, max)
 	case rule == "email":
 		return validateEmail(value)
+	case rule == "isTrue" || rule == "isFalse":
+		return validateBool(value, rule)
 	default:
 		return applyCustomRule(rule, fieldName, value)
 	}

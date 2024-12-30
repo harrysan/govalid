@@ -6,14 +6,14 @@ GoValid is a lightweight validation library for Golang designed to simplify data
 
 ## 🎯 Features
 
-* ✅ Tag-based validation for structs.
-* ✅ Built-in rules:
-  * `required`: Ensures the field is not empty.
-  * `min`: Minimum value for integers.
-  * `max`: Maximum value for integers.
-  * `email`: Validates email format.
-* ✅ Support for custom rules.
-* ✅ Easy-to-follow documentation and examples.
+- ✅ Tag-based validation for structs.
+- ✅ Built-in rules:
+  - `required`: Ensures the field is not empty.
+  - `min`: Minimum value for integers.
+  - `max`: Maximum value for integers.
+  - `email`: Validates email format.
+- ✅ Support for custom rules.
+- ✅ Easy-to-follow documentation and examples.
 
 ---
 
@@ -50,7 +50,7 @@ func main() {
 		Name:  "Jo",
 		Age:   17,
 		Email: "invalid-email",
-	}  
+	}
 
 	errs := govalid.ValidateStruct(user)
 	if len(errs) > 0 {
@@ -111,7 +111,7 @@ func main() {
 
 	data := Data{Number: 3}
 	errs := govalid.ValidateStruct(data)
-  
+
 	if len(errs) > 0 {
 		fmt.Println("Validation Errors:")
 		for _, err := range errs {
@@ -134,11 +134,13 @@ Field 'Number' failed validation 'isEven': Number must be an even number
 
 ## 📜 Built-In Rules
 
-| Rule         | Description                                                 | Example Tag             |
-| ------------ | ----------------------------------------------------------- | ----------------------- |
+| Rule       | Description                                                 | Example Tag           |
+| ---------- | ----------------------------------------------------------- | --------------------- |
 | `required` | Ensures the field is not empty.                             | `validate:"required"` |
 | `min`      | The field must be greater than or equal to a minimum value. | `validate:"min=3"`    |
 | `max`      | The field must be less than or equal to a maximum value.    | `validate:"max=10"`   |
+| `bool`     | The field must be true.                                     | `validate:"isTrue"`   |
+| `bool`     | The field must be false.                                    | `validate:"isFalse"`  |
 | `email`    | The field must be in a valid email format.                  | `validate:"email"`    |
 
 ---
@@ -195,9 +197,9 @@ govalid/
 
 Planned features for future updates:
 
-* Support for nested struct validation.
-* Customizable error messages (including multi-language support).
-* Validation for additional data types (e.g., float, time).
+- Support for nested struct validation.
+- Customizable error messages (including multi-language support).
+- Validation for additional data types (e.g., float, time).
 
 ---
 

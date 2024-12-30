@@ -16,6 +16,24 @@ type TypeParam interface {
 	int | int32 | int64 | float32 | float64
 }
 
+func validateBool(value any, rule string) error {
+	typ := reflect.TypeOf(value)
+	val := reflect.ValueOf(value)
+
+	switch rule {
+	case "isTrue":
+		if typ.Kind() == reflect.Bool && !val.Bool() {
+			return fmt.Errorf("value must be true")
+		}
+	case "isFalse":
+		if typ.Kind() == reflect.Bool && val.Bool() {
+			return fmt.Errorf("value must be false")
+		}
+	}
+
+	return nil
+}
+
 // validate min value
 func validateMin[T TypeParam](value any, min T) error {
 	typ := reflect.TypeOf(value) // value.(int)
@@ -93,13 +111,13 @@ func validateMax[T TypeParam](value any, max T) error {
 		v, _ := value.(float32)
 
 		if v > float32(max) {
-			return fmt.Errorf("value must be less than or equal to %f", float32(max))
+			return fmt.Errorf("value must be less than or equal to %.1f", float32(max))
 		}
 	} else if typ.Kind() == reflect.Float64 {
 		v, _ := value.(float64)
 
 		if v > float64(max) {
-			return fmt.Errorf("value must be less than or equal to %f", float64(max))
+			return fmt.Errorf("value must be less than or equal to %.1f", float64(max))
 		}
 	}
 
