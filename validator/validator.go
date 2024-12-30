@@ -72,10 +72,10 @@ func applyRule(fieldName string, value any, rule string) error {
 			return errors.New("field is required")
 		}
 	case strings.HasPrefix(rule, "min="):
-		min, _ := strconv.Atoi(strings.TrimPrefix(rule, "min="))
+		min, _ := strconv.ParseFloat(strings.TrimPrefix(rule, "min="), 64)
 		return validateMin(value, min)
 	case strings.HasPrefix(rule, "max="):
-		max, _ := strconv.Atoi(strings.TrimPrefix(rule, "max="))
+		max, _ := strconv.ParseFloat(strings.TrimPrefix(rule, "max="), 64)
 		return validateMax(value, max)
 	case rule == "email":
 		return validateEmail(value)

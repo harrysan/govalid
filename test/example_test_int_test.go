@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	govalid "github.com/harrysan/govalid/validator"
+	"github.com/stretchr/testify/assert"
 )
 
 type User struct {
@@ -13,14 +14,16 @@ type User struct {
 	Email string `validate:"required,email"`
 }
 
-func TestExample(t *testing.T) {
+func TestExampleInt(t *testing.T) {
 	user := User{
-		Name:  "Jo",
+		Name:  "John",
 		Age:   17,
-		Email: "invalid_email",
+		Email: "passed_email@example.com",
 	}
 
 	errs := govalid.ValidateStruct(user)
+	assert.NotNil(t, errs)
+
 	if len(errs) > 0 {
 		fmt.Println("Validation Errors : ")
 		for _, err := range errs {
