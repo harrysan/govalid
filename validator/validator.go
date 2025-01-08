@@ -1,7 +1,6 @@
 package govalid
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -26,16 +25,11 @@ func ValidateStruct(s any) []ValidationError {
 	val := reflect.ValueOf(s)
 	typ := reflect.TypeOf(s)
 
-	// fmt.Println(val)
-	// fmt.Println(val.Kind())
-	// fmt.Println(typ)
-
 	if val.Kind() != reflect.Struct {
 		panic("Validate: input must be a struct")
 	}
 
 	if val.Kind() == reflect.Ptr {
-		// fmt.Println("insert if reflect Ptr")
 		val = val.Elem()
 		typ = typ.Elem()
 	}
@@ -115,9 +109,7 @@ func ValidateStruct(s any) []ValidationError {
 func applyRule(fieldName string, value any, rule string) error {
 	switch {
 	case rule == "required":
-		if validateRequired(value) {
-			return errors.New("field is required")
-		}
+		return validateRequired(value)
 	case strings.HasPrefix(rule, "min="):
 		min, _ := strconv.ParseFloat(strings.TrimPrefix(rule, "min="), 64)
 		return validateMin(value, min)
@@ -128,9 +120,11 @@ func applyRule(fieldName string, value any, rule string) error {
 		return validateEmail(value)
 	case rule == "isTrue" || rule == "isFalse":
 		return validateBool(value, rule)
+	case rule == "slice":
+		return validateSlice(value)
 	default:
 		return applyCustomRule(rule, fieldName, value)
 	}
-
-	return nil
 }
+
+// TODO : validate slice nested = example slice test . go

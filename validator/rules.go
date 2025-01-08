@@ -7,13 +7,27 @@ import (
 	"regexp"
 )
 
-// check if nil / empty / 0
-func validateRequired(value any) bool {
-	return value == nil || value == "" || value == 0
-}
-
 type TypeParam interface {
 	int | int32 | int64 | float32 | float64
+}
+
+// check if nil / empty / 0
+func validateRequired(value any) error {
+	typ := reflect.TypeOf(value)
+	val := reflect.ValueOf(value)
+
+	if typ.Kind() == reflect.Slice {
+		ret := make([]interface{}, val.Len())
+		if len(ret) == 0 {
+			return fmt.Errorf("field is required")
+		}
+	} else {
+		if value == nil || value == "" || value == 0 {
+			return fmt.Errorf("field is required")
+		}
+	}
+
+	return nil
 }
 
 func validateBool(value any, rule string) error {
@@ -133,6 +147,16 @@ func validateEmail(value any) error {
 	re := regexp.MustCompile(`^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$`)
 	if !re.MatchString(v) {
 		return errors.New("invalid email format")
+	}
+
+	return nil
+}
+
+func validateSlice(value any) error {
+	typ := reflect.TypeOf(value)
+
+	if typ.Kind() != reflect.Slice {
+		return fmt.Errorf("value must be slice")
 	}
 
 	return nil
