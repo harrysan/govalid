@@ -26,11 +26,16 @@ func ValidateStruct(s any) []ValidationError {
 	val := reflect.ValueOf(s)
 	typ := reflect.TypeOf(s)
 
+	// fmt.Println(val)
+	// fmt.Println(val.Kind())
+	// fmt.Println(typ)
+
 	if val.Kind() != reflect.Struct {
 		panic("Validate: input must be a struct")
 	}
 
 	if val.Kind() == reflect.Ptr {
+		// fmt.Println("insert if reflect Ptr")
 		val = val.Elem()
 		typ = typ.Elem()
 	}
@@ -38,25 +43,67 @@ func ValidateStruct(s any) []ValidationError {
 	// Iterate field
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
+		field2 := val.Type().Field(i)
 		fieldType := typ.Field(i)
 
 		// Tag "validate"
 		tag := fieldType.Tag.Get("validate")
-		if tag == "" {
-			continue
+		if tag != "" {
+			// Split tag
+			rules := strings.Split(tag, ",")
+			for _, rule := range rules {
+				err := applyRule(fieldType.Name, field.Interface(), rule)
+				if err != nil {
+					errs = append(errs, ValidationError{
+						Field: fieldType.Name,
+						Tag:   rule,
+						Value: field.Interface(),
+						Err:   err,
+					})
+				}
+			}
 		}
 
-		// Split tag
-		rules := strings.Split(tag, ",")
-		for _, rule := range rules {
-			err := applyRule(fieldType.Name, field.Interface(), rule)
-			if err != nil {
-				errs = append(errs, ValidationError{
-					Field: fieldType.Name,
-					Tag:   rule,
-					Value: field.Interface(),
-					Err:   err,
-				})
+		// Tag "validate If"
+		tagVIf := fieldType.Tag.Get("validate_if")
+		if tagVIf != "" {
+			parts := strings.SplitN(strings.TrimPrefix(tagVIf, "validate_if:"), ",", 2)
+			if len(parts) != 2 {
+				panic("Invalid validate_if format. Expected 'Field=Value,rule'")
+			}
+			condition := parts[0]
+			additionalRule := parts[1]
+
+			// Parse condition (e.g., IsActive=true)
+			condParts := strings.SplitN(condition, "=", 2)
+			if len(condParts) != 2 {
+				panic("Invalid condition format in validate_if. Expected 'Field=Value'")
+			}
+			condField, condValue := condParts[0], condParts[1]
+
+			// Check condition field
+			condFieldValue := reflect.ValueOf(s).FieldByName(condField)
+			if !condFieldValue.IsValid() {
+				panic("Condition field '" + condField + "' not found")
+			}
+
+			// Convert condition value to string for comparison
+			condFieldValueStr := fmt.Sprintf("%v", condFieldValue.Interface())
+			if condFieldValueStr == condValue {
+				// Apply additional validation rule if condition is met
+				validateField(s, field2, additionalRule)
+			}
+			// Check 2nd condition (e.g., required)
+			if additionalRule != "" {
+				err := applyRule(fieldType.Name, field.Interface(), additionalRule)
+				if err != nil {
+					errs = append(errs, ValidationError{
+						Field: fieldType.Name,
+						Tag:   additionalRule,
+						Value: field.Interface(),
+						Err:   err,
+					})
+				}
 			}
 		}
 	}

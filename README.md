@@ -75,7 +75,24 @@ Field 'Email' failed validation 'email': invalid email format
 
 ---
 
-### **2. Add Custom Validation Rules**
+### **2. Conditional Validation**
+
+##### Conditional Validation: `validate_if`
+
+Use `validate_if` to apply rules conditionally based on another field's value.
+
+#### Example:
+
+```go
+type User struct {
+	IsActive bool   `validate:"isTrue"`
+	Reason   string `validate_if:"IsActive=true,required"`
+}
+```
+
+---
+
+### **3. Add Custom Validation Rules**
 
 You can register custom validation rules using the `RegisterCustomRule` function.
 
@@ -134,8 +151,8 @@ Field 'Number' failed validation 'isEven': Number must be an even number
 
 ## 📜 Built-In Rules
 
-| Rule       | Description                                                 | Example Tag           |
-| ---------- | ----------------------------------------------------------- | --------------------- |
+| Rule         | Description                                                 | Example Tag             |
+| ------------ | ----------------------------------------------------------- | ----------------------- |
 | `required` | Ensures the field is not empty.                             | `validate:"required"` |
 | `min`      | The field must be greater than or equal to a minimum value. | `validate:"min=3"`    |
 | `max`      | The field must be less than or equal to a maximum value.    | `validate:"max=10"`   |
