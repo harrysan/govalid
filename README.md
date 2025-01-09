@@ -92,7 +92,30 @@ type User struct {
 
 ---
 
-### **3. Add Custom Validation Rules**
+### **3. Slice and Map Validation**
+
+Use `validate` to apply rules on slice and maps.
+
+#### Example:
+
+```go
+type DataSlice struct {
+	Names []string `validate:"slice,required,min=3"`
+	Age   []int    `validate:"slice,max=30"`
+	Email []string `validate:"slice,email"`
+}
+```
+
+```go
+type DataMap struct {
+	Names []string          `validate:"slice,required,min=3"`
+	Tags  map[string]string `validate:"map,keys=required;min=3,values=required;min=5"`
+}
+```
+
+---
+
+### **4. Add Custom Validation Rules**
 
 You can register custom validation rules using the `RegisterCustomRule` function.
 
@@ -151,8 +174,8 @@ Field 'Number' failed validation 'isEven': Number must be an even number
 
 ## 📜 Built-In Rules
 
-| Rule         | Description                                                 | Example Tag             |
-| ------------ | ----------------------------------------------------------- | ----------------------- |
+| Rule       | Description                                                 | Example Tag           |
+| ---------- | ----------------------------------------------------------- | --------------------- |
 | `required` | Ensures the field is not empty.                             | `validate:"required"` |
 | `min`      | The field must be greater than or equal to a minimum value. | `validate:"min=3"`    |
 | `max`      | The field must be less than or equal to a maximum value.    | `validate:"max=10"`   |

@@ -25,6 +25,9 @@ func ValidateStruct(s any) []ValidationError {
 	val := reflect.ValueOf(s)
 	typ := reflect.TypeOf(s)
 
+	keyRules := []string{}
+	valueRules := []string{}
+
 	if val.Kind() != reflect.Struct {
 		panic("Validate: input must be a struct")
 	}
@@ -47,6 +50,17 @@ func ValidateStruct(s any) []ValidationError {
 			rules := strings.Split(tag, ",")
 			for _, rule := range rules {
 				err := applyRule(fieldType.Name, field.Interface(), rule)
+
+				// for Map
+				if fieldType.Type.Kind() == reflect.Map {
+					if strings.HasPrefix(rule, "keys=") {
+						keyRules = strings.Split(strings.TrimPrefix(rule, "keys="), ";")
+					} else if strings.HasPrefix(rule, "values=") {
+						valueRules = strings.Split(strings.TrimPrefix(rule, "values="), ";")
+
+					}
+				}
+
 				if err != nil {
 					errs = append(errs, ValidationError{
 						Field: fieldType.Name,
@@ -54,6 +68,38 @@ func ValidateStruct(s any) []ValidationError {
 						Value: field.Interface(),
 						Err:   err,
 					})
+				}
+			}
+
+			if fieldType.Type.Kind() == reflect.Map {
+				for _, key := range field.MapKeys() {
+					mapValue := field.MapIndex(key).Interface()
+
+					for _, rule := range keyRules {
+						err := applyRule(fieldType.Name, key.Interface(), rule)
+
+						if err != nil {
+							errs = append(errs, ValidationError{
+								Field: fieldType.Name,
+								Tag:   rule,
+								Value: key.Interface(), //field.Interface(),
+								Err:   fmt.Errorf(key.String() + err.Error()),
+							})
+						}
+					}
+
+					for _, rule := range valueRules {
+						err := applyRule(fieldType.Name, mapValue, rule)
+
+						if err != nil {
+							errs = append(errs, ValidationError{
+								Field: fieldType.Name,
+								Tag:   rule,
+								Value: mapValue, //field.Interface(),
+								Err:   fmt.Errorf(field.MapIndex(key).String() + err.Error()),
+							})
+						}
+					}
 				}
 			}
 		}
@@ -122,9 +168,11 @@ func applyRule(fieldName string, value any, rule string) error {
 		return validateRuleBool(value, rule)
 	case rule == "slice":
 		return validateRuleSlice(value)
-	default:
+	case rule == "maps":
+		return validateRuleMap(value)
+	case rule == "custom":
 		return applyCustomRule(rule, fieldName, value)
 	}
-}
 
-// TODO : validate slice nested = example slice test . go
+	return nil
+}

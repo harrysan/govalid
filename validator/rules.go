@@ -19,11 +19,11 @@ func validateRuleRequired(value any) error {
 	if typ.Kind() == reflect.Slice {
 		ret := make([]interface{}, val.Len())
 		if len(ret) == 0 {
-			return fmt.Errorf("field is required")
+			return fmt.Errorf(" field is required")
 		}
 	} else {
 		if value == nil || value == "" || value == 0 {
-			return fmt.Errorf("field is required")
+			return fmt.Errorf(" field is required")
 		}
 	}
 
@@ -247,6 +247,16 @@ func validateRuleSlice(value any) error {
 
 	if typ.Kind() != reflect.Slice {
 		return fmt.Errorf("value must be slice")
+	}
+
+	return nil
+}
+
+func validateRuleMap(value any) error {
+	typ := reflect.TypeOf(value)
+
+	if typ.Kind() != reflect.Map {
+		return fmt.Errorf("value must be map")
 	}
 
 	return nil

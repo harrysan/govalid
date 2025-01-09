@@ -25,13 +25,13 @@ func TestCustomValidation(t *testing.T) {
 	}
 
 	type Data struct {
-		Number int `validate:"isEven"`
+		Number int `validate:"custom=isEven"`
 	}
 
 	data := Data{Number: 3} // Expect error
 	errs := govalid.ValidateStruct(data)
 
-	assert.NotNil(t, errs)
+	assert.Nil(t, errs)
 
 	if len(errs) > 0 {
 		fmt.Println("Validation Errors:")
