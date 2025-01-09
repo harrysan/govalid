@@ -109,19 +109,19 @@ func ValidateStruct(s any) []ValidationError {
 func applyRule(fieldName string, value any, rule string) error {
 	switch {
 	case rule == "required":
-		return validateRequired(value)
+		return validateRuleRequired(value)
 	case strings.HasPrefix(rule, "min="):
 		min, _ := strconv.ParseFloat(strings.TrimPrefix(rule, "min="), 64)
-		return validateMin(value, min)
+		return validateRuleMin(value, min)
 	case strings.HasPrefix(rule, "max="):
 		max, _ := strconv.ParseFloat(strings.TrimPrefix(rule, "max="), 64)
-		return validateMax(value, max)
+		return validateRuleMax(value, max)
 	case rule == "email":
-		return validateEmail(value)
+		return validateRuleEmail(value)
 	case rule == "isTrue" || rule == "isFalse":
-		return validateBool(value, rule)
+		return validateRuleBool(value, rule)
 	case rule == "slice":
-		return validateSlice(value)
+		return validateRuleSlice(value)
 	default:
 		return applyCustomRule(rule, fieldName, value)
 	}

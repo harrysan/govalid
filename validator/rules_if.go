@@ -9,7 +9,7 @@ func validateField(data interface{}, field reflect.StructField, rule string) err
 
 	switch {
 	case rule == "required":
-		return validateRequired(value)
+		return validateRuleRequired(value)
 		// Add another rule (e.g., min, max)
 	}
 
