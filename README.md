@@ -115,7 +115,28 @@ type DataMap struct {
 
 ---
 
-### **4. Add Custom Validation Rules**
+### **4. Struct Validation**
+
+##### Use `validate` to apply rules on struct.
+
+#### Example:
+
+```go
+type Address struct {
+	City    string `validate:"required"`
+	ZipCode string `validate:"required,min=5"`
+}
+
+type UserStruct struct {
+	Name    string  `validate:"required"`
+	Age     int     `validate:"min=18"`
+	Address Address `validate:"struct"`
+}
+```
+
+---
+
+### **5. Add Custom Validation Rules**
 
 You can register custom validation rules using the `RegisterCustomRule` function.
 
@@ -174,8 +195,8 @@ Field 'Number' failed validation 'isEven': Number must be an even number
 
 ## 📜 Built-In Rules
 
-| Rule       | Description                                                 | Example Tag           |
-| ---------- | ----------------------------------------------------------- | --------------------- |
+| Rule         | Description                                                 | Example Tag             |
+| ------------ | ----------------------------------------------------------- | ----------------------- |
 | `required` | Ensures the field is not empty.                             | `validate:"required"` |
 | `min`      | The field must be greater than or equal to a minimum value. | `validate:"min=3"`    |
 | `max`      | The field must be less than or equal to a maximum value.    | `validate:"max=10"`   |

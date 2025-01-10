@@ -21,6 +21,7 @@ func (ve ValidationError) Error() string {
 // ValidateStruct validate struct based on tag
 func ValidateStruct(s any) []ValidationError {
 	var errs []ValidationError
+	err_s := ""
 
 	val := reflect.ValueOf(s)
 	typ := reflect.TypeOf(s)
@@ -42,6 +43,7 @@ func ValidateStruct(s any) []ValidationError {
 		field := val.Field(i)
 		field2 := val.Type().Field(i)
 		fieldType := typ.Field(i)
+		err_s = ""
 
 		// Tag "validate"
 		tag := fieldType.Tag.Get("validate")
@@ -51,14 +53,22 @@ func ValidateStruct(s any) []ValidationError {
 			for _, rule := range rules {
 				err := applyRule(fieldType.Name, field.Interface(), rule)
 
+				// for Struct
+				if field.Kind() == reflect.Struct {
+					err_s = applyRuleStruct(field.Interface())
+				}
+
 				// for Map
 				if fieldType.Type.Kind() == reflect.Map {
 					if strings.HasPrefix(rule, "keys=") {
 						keyRules = strings.Split(strings.TrimPrefix(rule, "keys="), ";")
 					} else if strings.HasPrefix(rule, "values=") {
 						valueRules = strings.Split(strings.TrimPrefix(rule, "values="), ";")
-
 					}
+				}
+
+				if err_s != "" {
+					err = fmt.Errorf(err_s)
 				}
 
 				if err != nil {
@@ -77,12 +87,11 @@ func ValidateStruct(s any) []ValidationError {
 
 					for _, rule := range keyRules {
 						err := applyRule(fieldType.Name, key.Interface(), rule)
-
 						if err != nil {
 							errs = append(errs, ValidationError{
 								Field: fieldType.Name,
 								Tag:   rule,
-								Value: key.Interface(), //field.Interface(),
+								Value: key.Interface(), // field.Interface(),
 								Err:   fmt.Errorf(key.String() + err.Error()),
 							})
 						}
@@ -90,12 +99,11 @@ func ValidateStruct(s any) []ValidationError {
 
 					for _, rule := range valueRules {
 						err := applyRule(fieldType.Name, mapValue, rule)
-
 						if err != nil {
 							errs = append(errs, ValidationError{
 								Field: fieldType.Name,
 								Tag:   rule,
-								Value: mapValue, //field.Interface(),
+								Value: mapValue, // field.Interface(),
 								Err:   fmt.Errorf(field.MapIndex(key).String() + err.Error()),
 							})
 						}
@@ -151,6 +159,35 @@ func ValidateStruct(s any) []ValidationError {
 	return errs
 }
 
+func applyRuleStruct(value any) string {
+	errs := ""
+	err_r := ""
+	// for Struct Validation
+	val_item := reflect.ValueOf(value)
+	typ_item := reflect.TypeOf(value)
+
+	for i := 0; i < val_item.NumField(); i++ {
+		field := typ_item.Field(i)
+		value := val_item.Field(i)
+		tag := field.Tag.Get("validate")
+		errs = ""
+
+		rules := strings.Split(tag, ",")
+		for _, rule := range rules {
+			err := applyRule(field.Name, value.Interface(), rule)
+			if err != nil {
+				errs = errs + field.Name + err.Error()
+			}
+		}
+
+		if errs != "" {
+			err_r = err_r + errs + "|"
+		}
+	}
+
+	return err_r
+}
+
 // applyRule => validate a field
 func applyRule(fieldName string, value any, rule string) error {
 	switch {
@@ -172,6 +209,12 @@ func applyRule(fieldName string, value any, rule string) error {
 		return validateRuleMap(value)
 	case rule == "custom":
 		return applyCustomRule(rule, fieldName, value)
+	case strings.Contains(rule, "struct"):
+		// nestedStruct := value.Interface() // Ambil nilai struct
+		err := validateRuleStruct(value)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
