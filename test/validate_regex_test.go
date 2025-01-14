@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/harrysan/govalid/rules"
 	govalid "github.com/harrysan/govalid/validator"
 	"github.com/stretchr/testify/assert"
 )
@@ -51,5 +52,34 @@ func TestValidateRegexPass(t *testing.T) {
 		}
 	} else {
 		fmt.Println("Validation Passed!")
+	}
+}
+
+func TestValidateCustomRegex(t *testing.T) {
+	// Override phone number regex to allow only Indonesian numbers
+	rules.AddOrUpdateRegexRule("phone_number", `^\+62[0-9]{9,13}$`)
+
+	user := UserRegex{
+		Username: "Pepsi",
+		Email:    "pepsi@man.com",
+		Phone:    "+628123456789", // Valid for Indonesian number
+	}
+
+	err := govalid.ValidateStruct(user)
+	fmt.Println("Validation 1")
+	if err != nil {
+		fmt.Println("Validation Error:", err)
+	} else {
+		fmt.Println("Validation Passed")
+	}
+
+	// Test invalid phone number
+	user.Phone = "+1234567890" // Not valid for Indonesian number
+	err = govalid.ValidateStruct(user)
+	fmt.Println("Validation 2")
+	if err != nil {
+		fmt.Println("Validation Error:", err)
+	} else {
+		fmt.Println("Validation Passed")
 	}
 }

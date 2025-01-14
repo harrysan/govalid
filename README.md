@@ -210,14 +210,15 @@ Field 'Number' failed validation 'isEven': Number must be an even number
 
 ## 📜 Built-In Rules
 
-| Rule         | Description                                                 | Example Tag             |
-| ------------ | ----------------------------------------------------------- | ----------------------- |
-| `required` | Ensures the field is not empty.                             | `validate:"required"` |
-| `min`      | The field must be greater than or equal to a minimum value. | `validate:"min=3"`    |
-| `max`      | The field must be less than or equal to a maximum value.    | `validate:"max=10"`   |
-| `bool`     | The field must be true.                                     | `validate:"isTrue"`   |
-| `bool`     | The field must be false.                                    | `validate:"isFalse"`  |
-| `email`    | The field must be in a valid email format.                  | `validate:"email"`    |
+| Rule         | Description                                                                                                                          | Example Tag                   |
+| :----------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
+| `required` | Ensures the field is not empty.                                                                                                      | `validate:"required"`       |
+| `min`      | The field must be greater than or equal to a minimum value.                                                                          | `validate:"min=3"`          |
+| `max`      | The field must be less than or equal to a maximum value.                                                                             | `validate:"max=10"`         |
+| `bool`     | The field must be true.                                                                                                              | `validate:"isTrue"`         |
+| `bool`     | The field must be false.                                                                                                             | `validate:"isFalse"`        |
+| `email`    | The field must be in a valid email format.                                                                                           | `validate:"email"`          |
+| `regex`    | Regex validation, rules in `rules/regex_rules.go`<br />for custom `rules.AddOrUpdateRegexRule` (see `validate_regex_test.go`) | `validate:"regex=username"` |
 
 ---
 

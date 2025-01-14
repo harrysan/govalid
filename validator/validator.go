@@ -147,7 +147,7 @@ func ValidateStruct(s any) []ValidationError {
 			condFieldValueStr := fmt.Sprintf("%v", condFieldValue.Interface())
 			if condFieldValueStr == condValue {
 				// Apply additional validation rule if condition is met
-				validateField(s, field2, additionalRule)
+				rules.ValidateField(s, field2, additionalRule)
 			}
 			// Check 2nd condition (e.g., required)
 			if additionalRule != "" {
@@ -201,34 +201,34 @@ func applyRuleStruct(value any) string {
 func applyRule(fieldName string, value any, rule string) error {
 	switch {
 	case rule == "required":
-		return validateRuleRequired(value)
+		return rules.ValidateRuleRequired(value)
 	case strings.HasPrefix(rule, "min="):
 		min, _ := strconv.ParseFloat(strings.TrimPrefix(rule, "min="), 64)
-		return validateRuleMin(value, min)
+		return rules.ValidateRuleMin(value, min)
 	case strings.HasPrefix(rule, "max="):
 		max, _ := strconv.ParseFloat(strings.TrimPrefix(rule, "max="), 64)
-		return validateRuleMax(value, max)
+		return rules.ValidateRuleMax(value, max)
 	case rule == "email":
-		return validateRuleEmail(value)
+		return rules.ValidateRuleEmail(value)
 	case rule == "isTrue" || rule == "isFalse":
-		return validateRuleBool(value, rule)
+		return rules.ValidateRuleBool(value, rule)
 	case rule == "slice":
-		return validateRuleSlice(value)
+		return rules.ValidateRuleSlice(value)
 	case rule == "maps":
-		return validateRuleMap(value)
+		return rules.ValidateRuleMap(value)
 	case rule == "custom":
 		return applyCustomRule(rule, fieldName, value)
 	case strings.Contains(rule, "struct"):
-		return validateRuleStruct(value)
+		return rules.ValidateRuleStruct(value)
 	case strings.HasPrefix(rule, "regex="):
 		pt := strings.TrimPrefix(rule, "regex=")
 
-		pattern, exists := rules.RegexRules[pt]
-		if !exists {
+		pattern, err := rules.GetRegexRule(pt)
+		if err != nil {
 			return fmt.Errorf("regex rule %s not found for field %s", pt, fieldName)
 		}
 
-		return validateRuleRegex(value, pattern)
+		return rules.ValidateRuleRegex(value, pattern)
 	}
 
 	return nil

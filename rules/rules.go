@@ -1,4 +1,4 @@
-package govalid
+package rules
 
 import (
 	"errors"
@@ -12,7 +12,7 @@ type TypeParam interface {
 }
 
 // check if nil / empty / 0
-func validateRuleRequired(value any) error {
+func ValidateRuleRequired(value any) error {
 	typ := reflect.TypeOf(value)
 	val := reflect.ValueOf(value)
 
@@ -30,7 +30,7 @@ func validateRuleRequired(value any) error {
 	return nil
 }
 
-func validateRuleBool(value any, rule string) error {
+func ValidateRuleBool(value any, rule string) error {
 	typ := reflect.TypeOf(value)
 	val := reflect.ValueOf(value)
 
@@ -49,7 +49,7 @@ func validateRuleBool(value any, rule string) error {
 }
 
 // validate Rule min
-func validateRuleMin[T TypeParam](value any, min T) error {
+func ValidateRuleMin[T TypeParam](value any, min T) error {
 	typ := reflect.TypeOf(value)
 	errors := ""
 
@@ -79,7 +79,7 @@ func validateRuleMin[T TypeParam](value any, min T) error {
 }
 
 // validate Rule min
-func validateRuleMax[T TypeParam](value any, min T) error {
+func ValidateRuleMax[T TypeParam](value any, min T) error {
 	typ := reflect.TypeOf(value)
 	errors := ""
 
@@ -109,7 +109,7 @@ func validateRuleMax[T TypeParam](value any, min T) error {
 }
 
 // validate Rule email
-func validateRuleEmail(value any) error {
+func ValidateRuleEmail(value any) error {
 	typ := reflect.TypeOf(value)
 	errors := ""
 
@@ -242,7 +242,7 @@ func validateEmail(value any) error {
 	return nil
 }
 
-func validateRuleSlice(value any) error {
+func ValidateRuleSlice(value any) error {
 	typ := reflect.TypeOf(value)
 
 	if typ.Kind() != reflect.Slice {
@@ -252,7 +252,7 @@ func validateRuleSlice(value any) error {
 	return nil
 }
 
-func validateRuleMap(value any) error {
+func ValidateRuleMap(value any) error {
 	typ := reflect.TypeOf(value)
 
 	if typ.Kind() != reflect.Map {
@@ -262,7 +262,7 @@ func validateRuleMap(value any) error {
 	return nil
 }
 
-func validateRuleStruct(data any) error {
+func ValidateRuleStruct(data any) error {
 	t := reflect.TypeOf(data)
 
 	if t.Kind() != reflect.Struct {
@@ -272,25 +272,20 @@ func validateRuleStruct(data any) error {
 	return nil
 }
 
-func validateRuleRegex(value any, pattern string) error {
+func ValidateRuleRegex(value any, pattern string) error {
 	v, ok := value.(string)
 	if !ok {
 		return fmt.Errorf(" regex validation only supports strings;")
 	}
-	// fmt.Println(pattern)
 
-	// Compile the regex pattern
-	// re, err := regexp.Compile(pattern)
 	matched, err := regexp.MatchString(pattern, v)
 	if err != nil {
 		return fmt.Errorf(" invalid regex pattern for %s;", value)
 	}
-	// fmt.Println(matched)
-	// fmt.Println(isTrue)
+
 	if !matched {
 		return fmt.Errorf(" %s does not match the required pattern;", value)
 	}
 
-	// Match the value with the regex pattern
 	return nil
 }
