@@ -240,16 +240,22 @@ type ValidationError struct {
 ## 📂 Project Structure
 
 ```
-govalid/
-├── go.mod                  		# Go module file
-├── validator/
-│   ├── validator.go        		# Core validation logic
-│   ├── rules.go            		# Built-in validation rules
-│   ├── custom.go           		# Custom validation rule support
-├── test/
-│   ├── example_test.go     		# Unit test for basic validation
-│   ├── example_custom_test.go 		# Unit test for custom validation rules
-├── README.md               		# Project documentation
+.
+└── govalid/
+    ├── go.mod
+    ├── validator/
+    │   ├── validator.go   # Core validation logic
+    │   ├── rules.go       # Rules for validation
+    │   ├── rules_if.go    # Rules for validation_if
+    │   └── custom.go      # Custom rule support
+    ├── rules/
+    │   └── regex_rules.go  # Regex rules
+    ├── test/
+    │   ├── validate_string_test.go     # Example usage
+    │   ├── validate_custom_test.go     # Example usage
+    │   ├── validate_struct_test.go     # Example usage
+    │   └── etc..
+    └── README.md          # Documentation
 ```
 
 ---
