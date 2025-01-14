@@ -49,6 +49,8 @@ func ValidateStruct(s any) []ValidationError {
 
 		// Tag "validate"
 		tag := fieldType.Tag.Get("validate")
+		errorMessage := fieldType.Tag.Get("error_message")
+
 		if tag != "" {
 			// Split tag
 			rules := strings.Split(tag, ",")
@@ -71,6 +73,10 @@ func ValidateStruct(s any) []ValidationError {
 
 				if err_s != "" {
 					err = fmt.Errorf(err_s)
+				}
+
+				if errorMessage != "" {
+					err = fmt.Errorf(errorMessage)
 				}
 
 				if err != nil {

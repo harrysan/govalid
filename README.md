@@ -136,7 +136,22 @@ type UserStruct struct {
 
 ---
 
-### **5. Add Custom Validation Rules**
+### **5. Custom Error Message**
+
+##### Use error_message on `validate` tag to apply custom error message.
+
+#### Example:
+
+```go
+type UserCustomError struct {
+	Age   int    `validate:"min=18" error_message:"Age must be at least 18"`
+	Email string `validate:"regex=email" error_message:"Invalid email format"`
+}
+```
+
+---
+
+### **6. Add Custom Validation Rules**
 
 You can register custom validation rules using the `RegisterCustomRule` function.
 
