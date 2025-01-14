@@ -271,3 +271,26 @@ func validateRuleStruct(data any) error {
 
 	return nil
 }
+
+func validateRuleRegex(value any, pattern string) error {
+	v, ok := value.(string)
+	if !ok {
+		return fmt.Errorf(" regex validation only supports strings;")
+	}
+	// fmt.Println(pattern)
+
+	// Compile the regex pattern
+	// re, err := regexp.Compile(pattern)
+	matched, err := regexp.MatchString(pattern, v)
+	if err != nil {
+		return fmt.Errorf(" invalid regex pattern for %s;", value)
+	}
+	// fmt.Println(matched)
+	// fmt.Println(isTrue)
+	if !matched {
+		return fmt.Errorf(" %s does not match the required pattern;", value)
+	}
+
+	// Match the value with the regex pattern
+	return nil
+}

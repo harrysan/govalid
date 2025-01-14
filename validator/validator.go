@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/harrysan/govalid/rules"
 )
 
 type ValidationError struct {
@@ -159,6 +161,7 @@ func ValidateStruct(s any) []ValidationError {
 	return errs
 }
 
+// applyRule => validate a field in struct
 func applyRuleStruct(value any) string {
 	errs := ""
 	err_r := ""
@@ -210,11 +213,16 @@ func applyRule(fieldName string, value any, rule string) error {
 	case rule == "custom":
 		return applyCustomRule(rule, fieldName, value)
 	case strings.Contains(rule, "struct"):
-		// nestedStruct := value.Interface() // Ambil nilai struct
-		err := validateRuleStruct(value)
-		if err != nil {
-			return err
+		return validateRuleStruct(value)
+	case strings.HasPrefix(rule, "regex="):
+		pt := strings.TrimPrefix(rule, "regex=")
+
+		pattern, exists := rules.RegexRules[pt]
+		if !exists {
+			return fmt.Errorf("regex rule %s not found for field %s", pt, fieldName)
 		}
+
+		return validateRuleRegex(value, pattern)
 	}
 
 	return nil

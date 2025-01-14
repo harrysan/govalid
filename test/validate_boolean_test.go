@@ -21,7 +21,6 @@ func TestExampleBoolean(t *testing.T) {
 
 	errs := govalid.ValidateStruct(user)
 	assert.NotNil(t, errs)
-	// assert.Nil(t, errs)
 
 	if len(errs) > 0 {
 		fmt.Println("Validation Errors : ")
