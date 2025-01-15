@@ -260,10 +260,10 @@ type ValidationError struct {
     ├── go.mod
     ├── validator/
     │   ├── validator.go   # Core validation logic
-    │   ├── rules.go       # Rules for validation
-    │   ├── rules_if.go    # Rules for validation_if
     │   └── custom.go      # Custom rule support
     ├── rules/
+    │   ├── rules.go       # Rules for validation
+    │   ├── rules_if.go    # Rules for validation_if
     │   └── regex_rules.go  # Regex rules
     ├── test/
     │   ├── validate_string_test.go     # Example usage
